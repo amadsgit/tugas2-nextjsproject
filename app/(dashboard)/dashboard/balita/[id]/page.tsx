@@ -1,12 +1,8 @@
 // app/(dashboard)/dashboard/balita/[id]/page.tsx
+
 import { notFound } from 'next/navigation';
 
-type Params = {
-  params: {
-    id: string;
-  };
-};
-
+// Dummy data balita
 const dummyBalita = [
   { id: '1', nama: 'Ayu Lestari', umur: '2 tahun', berat: '12 kg', tinggi: '85 cm' },
   { id: '2', nama: 'Rafi Pratama', umur: '1 tahun 8 bulan', berat: '10.5 kg', tinggi: '78 cm' },
@@ -14,14 +10,18 @@ const dummyBalita = [
 ];
 
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<{ id: string }[]> {
   return dummyBalita.map((balita) => ({
     id: balita.id,
   }));
 }
 
 
-export default function DetailBalitaPage({ params }: Params) {
+export default function DetailBalitaPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const balita = dummyBalita.find((item) => item.id === params.id);
 
   if (!balita) {

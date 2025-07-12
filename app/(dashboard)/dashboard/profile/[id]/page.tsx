@@ -1,21 +1,25 @@
 // app/(dashboard)/dashboard/profile/[id]/page.tsx
+
 import { notFound } from 'next/navigation';
 
-type Params = {
-  params: {
-    id: string;
-  };
-};
-
+// Data dummy user
 const dummyUser = [
   { id: '1', nama: 'Mamad Ahmad', alamat: 'Kabupaten Subang' },
 ];
 
-export async function generateStaticParams() {
-  return dummyUser.map((user) => ({ id: user.id }));
+
+export async function generateStaticParams(): Promise<{ id: string }[]> {
+  return dummyUser.map((user) => ({
+    id: user.id,
+  }));
 }
 
-export default function DetailProfilePage({ params }: Params) {
+
+export default function DetailProfilePage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const user = dummyUser.find((u) => u.id === params.id);
 
   if (!user) {
