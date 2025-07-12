@@ -1,11 +1,6 @@
 // app/(dashboard)/dashboard/balita/[id]/page.tsx
 import { notFound } from 'next/navigation';
-
-type Params = {
-  params: {
-    id: string;
-  };
-};
+import type { Metadata } from 'next';
 
 const dummyBalita = [
   { id: '1', nama: 'Ayu Lestari', umur: '2 tahun', berat: '12 kg', tinggi: '85 cm' },
@@ -19,7 +14,14 @@ export function generateStaticParams() {
   }));
 }
 
-export default function DetailBalitaPage({ params }: Params) {
+export function generateMetadata({ params }: { params: { id: string } }): Metadata {
+  const balita = dummyBalita.find((item) => item.id === params.id);
+  return {
+    title: balita ? `Detail Balita - ${balita.nama}` : 'Balita Tidak Ditemukan',
+  };
+}
+
+export default function DetailBalitaPage({ params }: { params: { id: string } }) {
   const balita = dummyBalita.find((item) => item.id === params.id);
 
   if (!balita) notFound();
