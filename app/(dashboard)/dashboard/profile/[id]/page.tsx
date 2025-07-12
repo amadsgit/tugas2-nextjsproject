@@ -19,7 +19,7 @@ export default function DetailProfilePage({ params }: Params) {
   const user = dummyUser.find((u) => u.id === params.id);
 
   if (!user) {
-    notFound(); // tidak boleh return notFound() langsung
+    notFound();
   }
 
   return (

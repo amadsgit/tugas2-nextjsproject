@@ -1,30 +1,29 @@
 // app/(dashboard)/dashboard/balita/[id]/page.tsx
 import { notFound } from 'next/navigation';
-import type { Metadata } from 'next';
 
+// Data dummy
 const dummyBalita = [
   { id: '1', nama: 'Ayu Lestari', umur: '2 tahun', berat: '12 kg', tinggi: '85 cm' },
   { id: '2', nama: 'Rafi Pratama', umur: '1 tahun 8 bulan', berat: '10.5 kg', tinggi: '78 cm' },
   { id: '3', nama: 'Zahra Amelia', umur: '3 tahun', berat: '13.2 kg', tinggi: '90 cm' },
 ];
 
-export function generateStaticParams() {
+
+export async function generateStaticParams() {
   return dummyBalita.map((balita) => ({
     id: balita.id,
   }));
 }
 
-export function generateMetadata({ params }: { params: { id: string } }): Metadata {
-  const balita = dummyBalita.find((item) => item.id === params.id);
-  return {
-    title: balita ? `Detail Balita - ${balita.nama}` : 'Balita Tidak Ditemukan',
-  };
-}
 
-export default function DetailBalitaPage({ params }: { params: { id: string } }) {
+export default function DetailBalitaPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const balita = dummyBalita.find((item) => item.id === params.id);
 
-  if (!balita) notFound();
+  if (!balita) return notFound();
 
   return (
     <div className="p-6 bg-white text-gray-800">
