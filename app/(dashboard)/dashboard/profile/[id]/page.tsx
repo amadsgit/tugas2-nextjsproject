@@ -1,22 +1,24 @@
 // app/(dashboard)/dashboard/profile/[id]/page.tsx
-import { notFound } from 'next/navigation';
+import { notFound } from 'next/navigation'
 
 const dummyUser = [
-  { id: '1', nama: 'Mamad Ahmad', alamat: 'Kabupaten Subang' },
-];
+  { id: '1', nama: 'Mamad Ahmad', alamat: 'Kabupaten Subang' }
+]
 
-export async function generateStaticParams(): Promise<{ id: string }[]> {
-  return dummyUser.map((user) => ({ id: user.id }));
+export async function generateStaticParams() {
+  return dummyUser.map((user) => ({
+    id: user.id
+  }))
 }
 
 export default function DetailProfilePage({
-  params,
+  params
 }: {
-  params: { id: string };
+  params: { id: string }
 }) {
-  const user = dummyUser.find((u) => u.id === params.id);
+  const user = dummyUser.find((u) => u.id === params.id)
 
-  if (!user) notFound();
+  if (!user) return notFound()
 
   return (
     <div className="p-6 bg-white text-gray-800">
@@ -26,5 +28,5 @@ export default function DetailProfilePage({
         <p><strong>Alamat:</strong> {user.alamat}</p>
       </div>
     </div>
-  );
+  )
 }

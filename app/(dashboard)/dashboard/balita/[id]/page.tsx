@@ -1,26 +1,28 @@
 // app/(dashboard)/dashboard/balita/[id]/page.tsx
-import { notFound } from 'next/navigation';
+import { notFound } from 'next/navigation'
 
 const dummyBalita = [
   { id: '1', nama: 'Ayu Lestari', umur: '2 tahun', berat: '12 kg', tinggi: '85 cm' },
   { id: '2', nama: 'Rafi Pratama', umur: '1 tahun 8 bulan', berat: '10.5 kg', tinggi: '78 cm' },
-  { id: '3', nama: 'Zahra Amelia', umur: '3 tahun', berat: '13.2 kg', tinggi: '90 cm' },
-];
+  { id: '3', nama: 'Zahra Amelia', umur: '3 tahun', berat: '13.2 kg', tinggi: '90 cm' }
+]
 
-
-export async function generateStaticParams(): Promise<{ id: string }[]> {
-  return dummyBalita.map((balita) => ({ id: balita.id }));
+// Untuk generate static params (SSG)
+export async function generateStaticParams() {
+  return dummyBalita.map((balita) => ({
+    id: balita.id
+  }))
 }
 
-
+// Komponen page
 export default function DetailBalitaPage({
-  params,
+  params
 }: {
-  params: { id: string };
+  params: { id: string }
 }) {
-  const balita = dummyBalita.find((item) => item.id === params.id);
+  const balita = dummyBalita.find((b) => b.id === params.id)
 
-  if (!balita) notFound();
+  if (!balita) return notFound()
 
   return (
     <div className="p-6 bg-white text-gray-800">
@@ -32,5 +34,5 @@ export default function DetailBalitaPage({
         <p><strong>Tinggi Badan:</strong> {balita.tinggi}</p>
       </div>
     </div>
-  );
+  )
 }
