@@ -11,7 +11,7 @@ const dummyUser = [
   { id: '1', nama: 'Mamad Ahmad', alamat: 'Kabupaten Subang' },
 ];
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return dummyUser.map((user) => ({ id: user.id }));
 }
 
