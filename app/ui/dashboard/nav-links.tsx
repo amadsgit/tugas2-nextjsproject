@@ -1,45 +1,157 @@
 'use client';
+
 import {
-  UserGroupIcon,
   HomeIcon,
-  DocumentDuplicateIcon,
+  UserGroupIcon,
   UserIcon,
   ClipboardDocumentIcon,
-  ClipboardDocumentListIcon
-
+  ClipboardDocumentListIcon,
+  ChartBarIcon,
+  CalendarDaysIcon,
+  BellIcon,
+  DocumentDuplicateIcon,
+  IdentificationIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import { useState } from 'react';
 
-// Map of links to display in the side navigation.
-// Depending on the size of the application, this would be stored in a database.
-const links = [
+const flatMenu = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
   { name: 'Data Balita', href: '/dashboard/balita', icon: ClipboardDocumentIcon },
-  { name: 'Data Ibu Hamil', href: '/dashboard/ibu-hamil', icon: ClipboardDocumentListIcon },
   { name: 'Invoices', href: '/dashboard/invoices', icon: DocumentDuplicateIcon },
+
+  // Admin
+  { name: 'Manajemen Posyandu & Kader', href: '/dashboard/manajemen-posyandu', icon: UserGroupIcon },
+  { name: 'Manajemen Akun', href: '/dashboard/akun', icon: UserIcon },
+  { name: 'Statistik Posyandu', href: '/dashboard/statistik', icon: ChartBarIcon },
+
+  // Kader
+  { name: 'Input Data Balita', href: '/dashboard/input/balita', icon: ClipboardDocumentIcon },
+  { name: 'Input Jadwal Imunisasi', href: '/dashboard/jadwal', icon: CalendarDaysIcon },
+  { name: 'Rekap Kehadiran', href: '/dashboard/kehadiran', icon: ClipboardDocumentListIcon },
+  { name: 'Status Gizi Balita', href: '/dashboard/status-gizi', icon: IdentificationIcon },
+
+  // Orang Tua
+  { name: 'Catatan Imunisasi & Pertumbuhan', href: '/dashboard/catatan-anak', icon: ClipboardDocumentListIcon },
+  { name: 'Jadwal Kunjungan', href: '/dashboard/jadwal-kunjungan', icon: CalendarDaysIcon },
 ];
 
+// Sesuaikan indeks slice berdasarkan posisi flatMenu
+const menuGroups = [
+  {
+    title: '👤 Admin / Puskesmas',
+    items: flatMenu.slice(3, 6),
+  },
+  {
+    title: '👩‍⚕️ Kader Posyandu',
+    items: flatMenu.slice(6, 10),
+  },
+  {
+    title: '👶 Orang Tua Balita',
+    items: flatMenu.slice(10, 13),
+  },
+];
 
 export default function NavLinks() {
   const pathname = usePathname();
+  const [openGroups, setOpenGroups] = useState<{ [key: string]: boolean }>({});
+
+  const toggleGroup = (title: string) => {
+    setOpenGroups((prev) => ({ ...prev, [title]: !prev[title] }));
+  };
 
   return (
     <>
-      {links.map((link) => {
-        const LinkIcon = link.icon;
-        return (
-          <Link
-            key={link.name}
-            href={link.href}
-            className={clsx('flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3', {'bg-sky-100 text-blue-600': pathname === link.href})}
-          >
-            <LinkIcon className="w-6" />
-            <p className="hidden md:block">{link.name}</p>
-          </Link>
-        );
-      })}
+      {/* ✅ MOBILE NAVBAR */}
+      <div className="md:hidden flex flex-wrap items-center justify-center gap-2 px-3 py-3 border-b bg-white">
+        {flatMenu.map((link) => {
+          const LinkIcon = link.icon;
+          const isActive = pathname === link.href;
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={clsx(
+                'flex flex-col items-center justify-center w-14 h-14 rounded-md text-gray-700 hover:text-blue-600 hover:bg-sky-100 transition',
+                { 'text-blue-600 bg-sky-100': isActive }
+              )}
+            >
+              <LinkIcon className="w-6" />
+              <span className="text-[10px] font-medium">{link.name.split(' ')[0]}</span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* ✅ DESKTOP SIDEBAR */}
+      <div className="hidden md:block w-full max-w-[260px] text-sm text-gray-800 px-2">
+        {/* Home */}
+        {flatMenu.slice(0, 3).map((link) => {
+          const LinkIcon = link.icon;
+          const isActive = pathname === link.href;
+          return (
+            <Link
+              key={link.name}
+              href={link.href}
+              className={clsx(
+                'flex items-center gap-2 rounded-md px-3 py-2 font-medium hover:bg-sky-100 hover:text-blue-600 mt-1',
+                { 'bg-sky-100 text-blue-600': isActive }
+              )}
+            >
+              <LinkIcon className="w-5" />
+              <span>{link.name}</span>
+            </Link>
+          );
+        })}
+
+        {/* Grouped Menus */}
+        {menuGroups.map((group) => (
+          <div key={group.title} className="mt-4 border-t pt-3">
+            <button
+              onClick={() => toggleGroup(group.title)}
+              className="flex w-full items-center justify-between px-2 py-2 font-semibold text-gray-600 hover:text-blue-600 transition"
+            >
+              <span className="text-sm">{group.title}</span>
+              {openGroups[group.title] ? (
+                <ChevronDownIcon className="w-4 h-4" />
+              ) : (
+                <ChevronRightIcon className="w-4 h-4" />
+              )}
+            </button>
+
+            {openGroups[group.title] && (
+              <div className="mt-1 flex flex-col gap-1">
+                {group.items.map((link) => {
+                  const LinkIcon = link.icon;
+                  const isActive = pathname === link.href;
+
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={clsx(
+                        'flex items-center gap-3 rounded-lg px-3 py-2 ml-1 mr-1 text-sm transition',
+                        {
+                          'bg-sky-100 text-blue-600': isActive,
+                          'text-gray-700 hover:text-blue-600 hover:bg-sky-100': !isActive,
+                        }
+                      )}
+                    >
+                      <LinkIcon className="w-5 h-5" />
+                      <span className="truncate">{link.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </>
   );
 }
