@@ -67,7 +67,7 @@ export default function NavLinks() {
 
   return (
     <>
-      {/* ✅ MOBILE NAVBAR */}
+      {/* MOBILE NAVBAR */}
       <div className="md:hidden flex flex-wrap items-center justify-center gap-2 px-3 py-3 border-b bg-white">
         {flatMenu.map((link) => {
           const LinkIcon = link.icon;
@@ -88,7 +88,7 @@ export default function NavLinks() {
         })}
       </div>
 
-      {/* ✅ DESKTOP SIDEBAR */}
+      {/* DESKTOP SIDEBAR */}
       <div className="hidden md:block w-full max-w-[260px] text-sm text-gray-800 px-2">
         {/* Home */}
         {flatMenu.slice(0, 3).map((link) => {
